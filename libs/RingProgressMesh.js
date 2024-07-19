@@ -90,20 +90,35 @@ class RingProgressMesh extends Mesh {
     }
     
     updateText(text) {
-        if (this.material && this.material.uniforms.uTextTexture) {
-            this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
-            this._canvas.width = 512;
-            this._canvas.height = 128;
-            this._context.font = `bold 32px Arial`;
-            this._context.textAlign = 'center';
-            this._context.textBaseline = 'middle';
-            this._context.fillStyle = 'white';
-            this._context.fillText(text, this._canvas.width / 2, this._canvas.height / 2);
-
-            // Update texture
-            this.material.uniforms.uTextTexture.value.needsUpdate = true;
-        }
-    }
+      if (this.material && this.material.uniforms.uTextTexture) {
+          const fontSize = 50; // Font size
+          const canvasWidth = 512;
+          const canvasHeight = 256; // Increased height to fit text below the arc
+  
+          // Set canvas dimensions
+          this._canvas.width = canvasWidth;
+          this._canvas.height = canvasHeight;
+          this._context.clearRect(0, 0, canvasWidth, canvasHeight);
+  
+          // Set font and style
+          this._context.font = `bold ${fontSize}px Arial`;
+          this._context.textAlign = 'center';
+          this._context.textBaseline = 'middle';
+          this._context.fillStyle = 'white';
+  
+          // Draw text below the arc
+          const textX = canvasWidth / 2;
+          const textY = canvasHeight - (fontSize * 1.5); // Position text below the arc
+  
+          // Draw text on canvas
+          this._context.fillText(text, textX, textY);
+  
+          // Update texture
+          this.material.uniforms.uTextTexture.value.needsUpdate = true;
+      }
+  }
+  
+  
     
     updateArcColor(color) {
         if (color.length === 3) {
