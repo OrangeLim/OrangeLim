@@ -153,6 +153,12 @@ class App{
                 pokemonFile,
                 function (gltf) {
                     const pokemon = gltf.scene.children[0];
+
+                    if (pokemonFile === 'Pokemon 8.glb') {
+                        // Adjust rotation to make Pokemon 8 stand straight
+                        pokemon.rotation.set(0, Math.PI, 0); // Example rotation; adjust as needed
+                    }
+    
                     self.scene.add(pokemon);
     
                     pokemon.traverse(function (child) {
