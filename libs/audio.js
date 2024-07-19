@@ -1,10 +1,17 @@
-
 let audioContext;
 let audioBuffer;
 let audioSource;
 
-function loadAudio(url) {
-    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+export function initializeAudioContext() {
+    if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    } else if (audioContext.state === 'suspended') {
+        audioContext.resume().catch(console.error);
+    }
+}
+
+export function loadAudio(url) {
+    initializeAudioContext();
     
     fetch(url)
         .then(response => response.arrayBuffer())
@@ -15,7 +22,8 @@ function loadAudio(url) {
         .catch(console.error);
 }
 
-function playAudio() {
+export function playAudio() {
+    initializeAudioContext();
     if (audioBuffer && audioContext) {
         audioSource = audioContext.createBufferSource();
         audioSource.buffer = audioBuffer;
@@ -24,12 +32,9 @@ function playAudio() {
     }
 }
 
-function stopAudio() {
+export function stopAudio() {
     if (audioSource) {
         audioSource.stop();
         audioSource.disconnect();
     }
 }
-
-// Export the functions if using a module system
-export { loadAudio, playAudio, stopAudio };

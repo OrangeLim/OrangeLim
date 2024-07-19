@@ -1,6 +1,4 @@
-// VRButton.js
-
-import { playAudio, stopAudio } from './audio.js';
+import { playAudio, stopAudio, initializeAudioContext } from './audio.js';
 
 class VRButton {
     constructor(renderer, options) {
@@ -9,12 +7,12 @@ class VRButton {
             this.onSessionStart = options.onSessionStart;
             this.onSessionEnd = options.onSessionEnd;
             this.sessionInit = options.sessionInit;
-            this.sessionMode = ( options.inline !== undefined && options.inline ) ? 'inline' : 'immersive-vr';
+            this.sessionMode = (options.inline !== undefined && options.inline) ? 'inline' : 'immersive-vr';
         } else {
             this.sessionMode = 'immersive-vr';
         }
         
-        if (this.sessionInit === undefined ) this.sessionInit = { optionalFeatures: [ 'local-floor', 'bounded-floor' ] };
+        if (this.sessionInit === undefined) this.sessionInit = { optionalFeatures: ['local-floor', 'bounded-floor'] };
         
         if ('xr' in navigator) {
             const button = document.createElement('button');
@@ -69,6 +67,7 @@ class VRButton {
             currentSession = session;
 
             if (self.onSessionStart !== undefined) self.onSessionStart();
+            initializeAudioContext(); // Initialize AudioContext on user interaction
             playAudio(); // Play audio when session starts
         }
 
@@ -112,10 +111,8 @@ class VRButton {
     }
 
     disableButton(button) {
-
         button.style.cursor = 'auto';
         button.style.opacity = '0.5';
-        
         button.onmouseenter = null;
         button.onmouseleave = null;
         button.onclick = null;
@@ -131,7 +128,8 @@ class VRButton {
         button.style.bottom = '0px';
         button.style.border = '';
         button.style.opacity = '1';
-        button.style.fontSize = '13px';        button.textContent = 'VR NOT SUPPORTED';
+        button.style.fontSize = '13px';
+        button.textContent = 'VR NOT SUPPORTED';
     }
 
     stylizeElement(element, active = true, fontSize = 13, ignorePadding = false) {
