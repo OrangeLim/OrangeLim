@@ -78,7 +78,7 @@ class VRButton{
         self.renderer.xr.setSession(session);
         self.stylizeElement(button, false, 12, true);
         
-        button.textContent = 'EXIT VR';
+        button.textContent = 'PLAY IN VR';
 
         currentSession = session;
         
