@@ -91,68 +91,97 @@ class App{
         this.renderer.setSize( window.innerWidth, window.innerHeight );  
     }
     
-	loadCollege(){
-        
-		const loader = new GLTFLoader( ).setPath(this.assetsPath);
+	loadCollege() {
+        const loader = new GLTFLoader().setPath(this.assetsPath);
         const dracoLoader = new DRACOLoader();
-        dracoLoader.setDecoderPath( './libs/three/js/draco/' );
-        loader.setDRACOLoader( dracoLoader );
-        
+        dracoLoader.setDecoderPath('./libs/three/js/draco/');
+        loader.setDRACOLoader(dracoLoader);
+    
         const self = this;
-		
-		// Load a glTF resource
-		loader.load(
-			// resource URL
-			'college.glb',
-			// called when the resource is loaded
-			function ( gltf ) {
-
+    
+        // Load the College scene
+        loader.load(
+            'college.glb',
+            function (gltf) {
                 const college = gltf.scene.children[0];
-				self.scene.add( college );
-				
-				college.traverse(function (child) {
-    				if (child.isMesh){
-						if (child.name.indexOf("PROXY")!=-1){
-							child.material.visible = false;
-							self.proxy = child;
-						}else if (child.material.name.indexOf('Glass')!=-1){
+                self.scene.add(college);
+    
+                college.traverse(function (child) {
+                    if (child.isMesh) {
+                        if (child.name.indexOf("PROXY") != -1) {
+                            child.material.visible = false;
+                            self.proxy = child;
+                        } else if (child.material.name.indexOf('Glass') != -1) {
                             child.material.opacity = 0.1;
                             child.material.transparent = true;
-                        }else if (child.material.name.indexOf("SkyBox")!=-1){
+                        } else if (child.material.name.indexOf("SkyBox") != -1) {
                             const mat1 = child.material;
-                            const mat2 = new THREE.MeshBasicMaterial({map: mat1.map});
+                            const mat2 = new THREE.MeshBasicMaterial({ map: mat1.map });
                             child.material = mat2;
                             mat1.dispose();
                         }
-					}
-				});
-                       
+                    }
+                });
+    
                 const door1 = college.getObjectByName("LobbyShop_Door__1_");
                 const door2 = college.getObjectByName("LobbyShop_Door__2_");
                 const pos = door1.position.clone().sub(door2.position).multiplyScalar(0.5).add(door2.position);
                 const obj = new THREE.Object3D();
                 obj.name = "LobbyShop";
                 obj.position.copy(pos);
-                college.add( obj );
-                
+                college.add(obj);
+    
                 self.loadingBar.visible = false;
-			
+    
                 self.setupXR();
-			},
-			// called while loading is progressing
-			function ( xhr ) {
-
-				self.loadingBar.progress = (xhr.loaded / xhr.total);
-				
-			},
-			// called when loading has errors
-			function ( error ) {
-
-				console.log( 'An error happened' );
-
-			}
-		);
-	}
+            },
+            // called while loading is progressing
+            function (xhr) {
+                self.loadingBar.progress = (xhr.loaded / xhr.total);
+            },
+            // called when loading has errors
+            function (error) {
+                console.log('An error happened while loading college.glb');
+            }
+        );
+    
+        // Function to load Pokemon GLB files
+        function loadPokemon(pokemonFile) {
+            loader.load(
+                pokemonFile,
+                function (gltf) {
+                    const pokemon = gltf.scene.children[0];
+                    self.scene.add(pokemon);
+    
+                    pokemon.traverse(function (child) {
+                        if (child.isMesh) {
+                            // Apply specific material adjustments if needed
+                            // For example: child.material.opacity = 0.5;
+                        }
+                    });
+    
+                    console.log(pokemonFile + " loaded");
+                },
+                // called while loading is progressing
+                function (xhr) {
+                    self.loadingBar.progress = (xhr.loaded / xhr.total);
+                },
+                // called when loading has errors
+                function (error) {
+                    console.log('An error happened while loading ' + pokemonFile);
+                }
+            );
+        }
+    
+        // Load the Pokemon scenes
+        loadPokemon('Pokemon.glb');
+        loadPokemon('Pokemon2.glb');
+        loadPokemon('Pokemon3.glb');
+        loadPokemon('Pokemon4.glb');
+        loadPokemon('Pokemon5.glb');
+    }
+    
+    
     
     setupXR(){
         this.renderer.xr.enabled = true;
