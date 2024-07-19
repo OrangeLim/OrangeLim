@@ -191,10 +191,9 @@ class App{
         loadPokemon('Pokemon 12.glb');
         loadPokemon('Pokemon 13.glb');
         loadPokemon('Pokemon Healing Center');
+
 }
-}
-    }
-    }
+
     
     
     
