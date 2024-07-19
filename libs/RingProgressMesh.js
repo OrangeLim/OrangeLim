@@ -71,9 +71,7 @@ class RingProgressMesh extends Mesh {
         this.geometry = new PlaneBufferGeometry();
         this.scale.set(scale, scale, scale);
 
-        this.updateText(text);
-        this.updateArcColor(arcColor);
-        
+        // Create the ShaderMaterial
         this.material = new ShaderMaterial({
             uniforms: {
                 uProgress: { value: 0.0 },
@@ -85,20 +83,26 @@ class RingProgressMesh extends Mesh {
             alphaTest: 0.5,
             transparent: true
         });
+
+        // Call updateText after material is set
+        this.updateText(text);
+        this.updateArcColor(arcColor);
     }
     
     updateText(text) {
-        this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
-        this._canvas.width = 512;
-        this._canvas.height = 128;
-        this._context.font = `bold 32px Arial`;
-        this._context.textAlign = 'center';
-        this._context.textBaseline = 'middle';
-        this._context.fillStyle = 'white';
-        this._context.fillText(text, this._canvas.width / 2, this._canvas.height / 2);
+        if (this.material && this.material.uniforms.uTextTexture) {
+            this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
+            this._canvas.width = 512;
+            this._canvas.height = 128;
+            this._context.font = `bold 32px Arial`;
+            this._context.textAlign = 'center';
+            this._context.textBaseline = 'middle';
+            this._context.fillStyle = 'white';
+            this._context.fillText(text, this._canvas.width / 2, this._canvas.height / 2);
 
-        // Update texture
-        this.material.uniforms.uTextTexture.value.needsUpdate = true;
+            // Update texture
+            this.material.uniforms.uTextTexture.value.needsUpdate = true;
+        }
     }
     
     updateArcColor(color) {
