@@ -178,6 +178,7 @@ class App{
     
         // Load the Pokemon scenes
         loadPokemon('Pokemon.glb');
+        loadPokemon('Pokemon 1.glb');
         loadPokemon('Pokemon 2.glb');
         loadPokemon('Pokemon 3.glb');
         loadPokemon('Pokemon 4.glb');
@@ -189,8 +190,7 @@ class App{
         loadPokemon('Pokemon 10.glb');
         loadPokemon('Pokemon 11.glb');
         loadPokemon('Pokemon 12.glb');
-        loadPokemon('Pokemon 13.glb');
-        loadPokemon('Pokemon Healing Center');
+        loadPokemon('Pokemon Healing Center.glb');
 
 }
 
