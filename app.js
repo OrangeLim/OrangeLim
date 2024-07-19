@@ -147,6 +147,8 @@ class App{
     
         // Function to load Pokemon GLB files
         function loadPokemon(pokemonFile) {
+            console.log('Attempting to load:', pokemonFile);
+    
             loader.load(
                 pokemonFile,
                 function (gltf) {
@@ -165,21 +167,24 @@ class App{
                 // called while loading is progressing
                 function (xhr) {
                     self.loadingBar.progress = (xhr.loaded / xhr.total);
+                    console.log(pokemonFile + " loading progress: " + (xhr.loaded / xhr.total * 100) + "%");
                 },
                 // called when loading has errors
                 function (error) {
-                    console.log('An error happened while loading ' + pokemonFile);
+                    console.log('An error happened while loading ' + pokemonFile + ':', error);
                 }
             );
         }
     
         // Load the Pokemon scenes
         loadPokemon('Pokemon.glb');
-        loadPokemon('Pokemon2.glb');
-        loadPokemon('Pokemon3.glb');
-        loadPokemon('Pokemon4.glb');
-        loadPokemon('Pokemon5.glb');
+        loadPokemon('Pokemon 2.glb');
+        loadPokemon('Pokemon 3.glb');
+        loadPokemon('Pokemon 4.glb');
+        loadPokemon('Pokemon 5.glb');
+        loadPokemon('Pokemon 6.glb');
     }
+    
     
     
     
