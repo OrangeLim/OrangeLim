@@ -66,88 +66,67 @@ class VRButton{
 
     }
 
-	showEnterVR( button ) {
+	showEnterVR(button) {
+    let currentSession = null;
+    const self = this;
+    
+    this.stylizeElement(button, true, 30, true);
+    
+    function onSessionStarted(session) {
+        session.addEventListener('end', onSessionEnded);
 
-        let currentSession = null;
-        const self = this;
+        self.renderer.xr.setSession(session);
+        self.stylizeElement(button, false, 12, true);
         
-        this.stylizeElement( button, true, 30, true );
+        button.textContent = 'EXIT VR';
+
+        currentSession = session;
         
-        function onSessionStarted( session ) {
-
-            session.addEventListener( 'end', onSessionEnded );
-
-            self.renderer.xr.setSession( session );
-            self.stylizeElement( button, false, 12, true );
-            
-            button.textContent = 'EXIT VR';
-
-            currentSession = session;
-            
-            if (self.onSessionStart !== undefined) self.onSessionStart();
-
-        }
-
-        function onSessionEnded( ) {
-
-            currentSession.removeEventListener( 'end', onSessionEnded );
-
-            self.stylizeElement( button, true, 12, true );
-            button.textContent = 'ENTER VR';
-
-            currentSession = null;
-            
-            if (self.onSessionEnd !== undefined) self.onSessionEnd();
-
-        }
-
-        //
-
-        button.style.display = '';
-        button.style.right = '20px';
-        button.style.width = '80px';
-        button.style.cursor = 'pointer';
-        button.innerHTML = '<i class="fas fa-vr-cardboard"></i>';
-        
-
-        button.onmouseenter = function () {
-            
-            button.style.fontSize = '12px'; 
-            button.textContent = (currentSession===null) ? 'ENTER VR' : 'EXIT VR';
-            button.style.opacity = '1.0';
-
-        };
-
-        button.onmouseleave = function () {
-            
-            button.style.fontSize = '30px'; 
-            button.innerHTML = '<i class="fas fa-vr-cardboard"></i>';
-            button.style.opacity = '0.5';
-
-        };
-
-        button.onclick = function () {
-
-            if ( currentSession === null ) {
-
-                // WebXR's requestReferenceSpace only works if the corresponding feature
-                // was requested at session creation time. For simplicity, just ask for
-                // the interesting ones as optional features, but be aware that the
-                // requestReferenceSpace call will fail if it turns out to be unavailable.
-                // ('local' is always available for immersive sessions and doesn't need to
-                // be requested separately.)
-
-                navigator.xr.requestSession( self.sessionMode, self.sessionInit ).then( onSessionStarted );
-
-            } else {
-
-                currentSession.end();
-
-            }
-
-        };
-
+        if (self.onSessionStart !== undefined) self.onSessionStart();
     }
+
+    function onSessionEnded() {
+        currentSession.removeEventListener('end', onSessionEnded);
+
+        self.stylizeElement(button, true, 12, true);
+        button.textContent = 'PLAY';
+
+        currentSession = null;
+        
+        if (self.onSessionEnd !== undefined) self.onSessionEnd();
+    }
+
+    // Center the button
+    button.style.display = '';
+    button.style.width = '80px';
+    button.style.height = '40px';
+    button.style.cursor = 'pointer';
+    button.innerHTML = '<i class="fas fa-vr-cardboard"></i>';
+    button.style.left = '50%';
+    button.style.top = '50%';
+    button.style.transform = 'translate(-50%, -50%)'; // Center the button
+
+    button.onmouseenter = function () {
+        button.style.fontSize = '12px'; 
+        button.textContent = (currentSession === null) ? 'ENTER VR' : 'EXIT VR';
+        button.style.opacity = '1.0';
+    };
+
+    button.onmouseleave = function () {
+        button.style.fontSize = '30px'; 
+        button.innerHTML = '<i class="fas fa-vr-cardboard"></i>';
+        button.style.opacity = '0.5';
+    };
+
+    button.onclick = function () {
+        if (currentSession === null) {
+            navigator.xr.requestSession(self.sessionMode, self.sessionInit).then(onSessionStarted);
+        } else {
+            currentSession.end();
+        }
+    };
+}
+
 
     disableButton(button) {
 
