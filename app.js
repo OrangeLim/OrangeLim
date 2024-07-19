@@ -177,12 +177,23 @@ class App{
         }
     
         // Load the Pokemon scenes
-        loadPokemon('Po.glb');
-        loadPokemon('Pok.glb');
-        loadPokemon('Poke.glb');
-        loadPokemon('Pokem.glb');
-        loadPokemon('Pokemo.glb');
         loadPokemon('Pokemon.glb');
+        loadPokemon('Pokemon 2.glb');
+        loadPokemon('Pokemon 3.glb');
+        loadPokemon('Pokemon 4.glb');
+        loadPokemon('Pokemon 5.glb');
+        loadPokemon('Pokemon 6.glb');
+        loadPokemon('Pokemon 7.glb');
+        loadPokemon('Pokemon 8.glb');
+        loadPokemon('Pokemon 9.glb');
+        loadPokemon('Pokemon 10.glb');
+        loadPokemon('Pokemon 11.glb');
+        loadPokemon('Pokemon 12.glb');
+        loadPokemon('Pokemon 13.glb');
+        loadPokemon('Pokemon Healing Center');
+}
+}
+    }
     }
     
     
