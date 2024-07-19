@@ -104,11 +104,11 @@ class RingProgressMesh extends Mesh {
           this._context.font = `bold ${fontSize}px Arial`;
           this._context.textAlign = 'center';
           this._context.textBaseline = 'middle';
-          this._context.fillStyle = 'white';
+          this._context.fillStyle = 'black';
   
           // Draw text below the arc
           const textX = canvasWidth / 2;
-          const textY = canvasHeight - (fontSize * 0.1); // Position text below the arc
+          const textY = canvasHeight - (fontSize * 0.09); // Position text below the arc
   
           // Draw text on canvas
           this._context.fillText(text, textX, textY);
