@@ -156,7 +156,7 @@ class App{
 
                     if (pokemonFile === 'Pokemon 8.glb') {
                         // Adjust rotation to make Pokemon 8 stand straight
-                        pokemon.rotation.set(0, Math.PI, 0); // Example rotation; adjust as needed
+                        pokemon.rotation.set(0, 0, 180); // Example rotation; adjust as needed
                     }
     
                     self.scene.add(pokemon);
