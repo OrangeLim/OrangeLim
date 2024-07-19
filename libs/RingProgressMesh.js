@@ -90,35 +90,33 @@ class RingProgressMesh extends Mesh {
     }
     
     updateText(text) {
-      if (this.material && this.material.uniforms.uTextTexture) {
-          const fontSize = 100; // Font size
-          const canvasWidth = 512;
-          const canvasHeight = 512; // Increased height to fit text below the arc
-  
-          // Set canvas dimensions
-          this._canvas.width = canvasWidth;
-          this._canvas.height = canvasHeight;
-          this._context.clearRect(0, 0, canvasWidth, canvasHeight);
-  
-          // Set font and style
-          this._context.font = `bold ${fontSize}px Arial`;
-          this._context.textAlign = 'center';
-          this._context.textBaseline = 'middle';
-          this._context.fillStyle = 'black';
-  
-          // Draw text below the arc
-          const textX = canvasWidth / 2;
-          const textY = canvasHeight - (fontSize * 0.02); // Position text below the arc
-  
-          // Draw text on canvas
-          this._context.fillText(text, textX, textY);
-  
-          // Update texture
-          this.material.uniforms.uTextTexture.value.needsUpdate = true;
-      }
-  }
-  
-  
+        if (this.material && this.material.uniforms.uTextTexture) {
+            const fontSize = 100; // Font size
+            const canvasWidth = 1024;
+            const canvasHeight = 512; // Height adjusted to fit the text and arc
+      
+            // Set canvas dimensions
+            this._canvas.width = canvasWidth;
+            this._canvas.height = canvasHeight;
+            this._context.clearRect(0, 0, canvasWidth, canvasHeight);
+      
+            // Set font and style
+            this._context.font = `bold ${fontSize}px Arial`;
+            this._context.textAlign = 'center';
+            this._context.textBaseline = 'middle';
+            this._context.fillStyle = 'black';
+      
+            // Draw text below the arc
+            const textX = canvasWidth / 2;
+            const textY = canvasHeight * 0.01; // Position text below the arc
+      
+            // Draw text on canvas
+            this._context.fillText(text, textX, textY);
+      
+            // Update texture
+            this.material.uniforms.uTextTexture.value.needsUpdate = true;
+        }
+    }
     
     updateArcColor(color) {
         if (color.length === 3) {
