@@ -1,4 +1,4 @@
-import { Mesh, PlaneBufferGeometry, ShaderMaterial, CanvasTexture } from './three/three.module.js';
+import { Mesh, PlaneBufferGeometry, ShaderMaterial, CanvasTexture, Color } from './three/three.module.js';
 
 const vshader = `
 varying vec2 vUv;
@@ -20,7 +20,7 @@ varying vec2 vUv;
 float circle(vec2 pt, vec2 center, float radius){
   pt -= center;
   float len = length(pt);
-  return (len<radius) ? 1.0 : 0.0;
+  return (len < radius) ? 1.0 : 0.0;
 }
 
 float arc(vec2 pt, vec2 center, float radius, float percent){
@@ -30,13 +30,13 @@ float arc(vec2 pt, vec2 center, float radius, float percent){
   float len = length(d);
   float halfRadius = radius * 0.5;
 
-  if ( len<radius && len>halfRadius){
+  if ( len < radius && len > halfRadius){
     percent = clamp(percent, 0.0, 1.0);
     float arcAngle = PI2 * percent;
 
     float angle = mod( arcAngle - atan(d.y, d.x), PI2);
     float edgeWidth = radius * 0.05;
-    result = (angle<arcAngle) ? smoothstep(halfRadius, halfRadius + edgeWidth, len) - smoothstep(radius-edgeWidth, radius, len) : 0.0;
+    result = (angle < arcAngle) ? smoothstep(halfRadius, halfRadius + edgeWidth, len) - smoothstep(radius - edgeWidth, radius, len) : 0.0;
   }
 
   return result;
@@ -64,44 +64,49 @@ void main (void)
 class RingProgressMesh extends Mesh {
     constructor(scale = 1, text = 'Loading...', arcColor = [240, 255, 0]) {
         super();
-        
-        const uniforms = {
-            uProgress: { value: 0.0 },
-            uTextTexture: { value: this.createTextTexture(text) },
-            uArcColor: { value: new THREE.Color(...arcColor) } // Set initial arc color
-        }
 
+        this._canvas = document.createElement('canvas'); // Cache canvas element
+        this._context = this._canvas.getContext('2d');
+        
+        this.geometry = new PlaneBufferGeometry();
+        this.scale.set(scale, scale, scale);
+
+        this.updateText(text);
+        this.updateArcColor(arcColor);
+        
         this.material = new ShaderMaterial({
-            uniforms: uniforms,
+            uniforms: {
+                uProgress: { value: 0.0 },
+                uTextTexture: { value: new CanvasTexture(this._canvas) },
+                uArcColor: { value: new Color(...arcColor) }
+            },
             vertexShader: vshader,
             fragmentShader: fshader,
             alphaTest: 0.5,
             transparent: true
         });
-        
-        this.geometry.dispose();
-        this.geometry = new PlaneBufferGeometry();
-        this.scale.set(scale, scale, scale);
-        this.progress = 1;
     }
     
-    createTextTexture(text) {
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        const fontSize = 32;
+    updateText(text) {
+        this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
+        this._canvas.width = 512;
+        this._canvas.height = 128;
+        this._context.font = `bold 32px Arial`;
+        this._context.textAlign = 'center';
+        this._context.textBaseline = 'middle';
+        this._context.fillStyle = 'white';
+        this._context.fillText(text, this._canvas.width / 2, this._canvas.height / 2);
 
-        canvas.width = 512;
-        canvas.height = 128;
-        context.font = `bold ${fontSize}px Arial`;
-        context.textAlign = 'center';
-        context.textBaseline = 'middle';
-        context.fillStyle = 'white';
-        context.fillText(text, canvas.width / 2, canvas.height / 2);
-
-        const texture = new CanvasTexture(canvas);
-        texture.needsUpdate = true;
-
-        return texture;
+        // Update texture
+        this.material.uniforms.uTextTexture.value.needsUpdate = true;
+    }
+    
+    updateArcColor(color) {
+        if (color.length === 3) {
+            this.material.uniforms.uArcColor.value = new Color(...color);
+        } else {
+            console.warn('Invalid color format. Expected an array of 3 numbers.');
+        }
     }
     
     set progress(value) {
@@ -115,7 +120,7 @@ class RingProgressMesh extends Mesh {
     }
 
     set arcColor(color) {
-        this.material.uniforms.uArcColor.value = new THREE.Color(...color);
+        this.updateArcColor(color);
     }
     
     get arcColor() {
