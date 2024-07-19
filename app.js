@@ -9,6 +9,7 @@ import { VRButton } from './libs/VRButton.js';
 import { CanvasUI } from './libs/CanvasUI.js';
 import { GazeController } from './libs/GazeController.js'
 import { XRControllerModelFactory } from './libs/three/jsm/XRControllerModelFactory.js';
+import { loadAudio } from './audio.js';
 
 class App{
 	constructor(){
@@ -208,7 +209,7 @@ class App{
         this.renderer.xr.enabled = true;
 
         const btn = new VRButton( this.renderer );
-        
+        loadAudio('/assets/Background Music.mp3');
         const self = this;
         
         const timeoutId = setTimeout( connectionTimeout, 2000 );
