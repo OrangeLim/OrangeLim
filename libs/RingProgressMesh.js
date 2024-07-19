@@ -91,7 +91,7 @@ class RingProgressMesh extends Mesh {
     
     updateText(text) {
       if (this.material && this.material.uniforms.uTextTexture) {
-          const fontSize = 50; // Font size
+          const fontSize = 100; // Font size
           const canvasWidth = 512;
           const canvasHeight = 256; // Increased height to fit text below the arc
   
@@ -108,7 +108,7 @@ class RingProgressMesh extends Mesh {
   
           // Draw text below the arc
           const textX = canvasWidth / 2;
-          const textY = canvasHeight - (fontSize * 0.09); // Position text below the arc
+          const textY = canvasHeight - (fontSize * 0.05); // Position text below the arc
   
           // Draw text on canvas
           this._context.fillText(text, textX, textY);
