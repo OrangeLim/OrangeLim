@@ -91,7 +91,7 @@ class RingProgressMesh extends Mesh {
     
     updateText(text) {
       if (this.material && this.material.uniforms.uTextTexture) {
-          const fontSize = 70; // Font size
+          const fontSize = 90; // Font size
           const canvasWidth = 512;
           const canvasHeight = 256; // Height adjusted to fit the text and arc
     
